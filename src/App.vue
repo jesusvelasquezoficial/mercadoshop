@@ -10,7 +10,7 @@
       <b-container>
         <b-navbar-brand class="d-flex align-items-center" to="/">
           <img class="mb-1" src="@/assets/icono.png" alt="" width="32px" />
-          <b class="pl-1"> PHOENIX SHOP</b></b-navbar-brand
+          <b class="pl-1"> MERCADO SHOP</b></b-navbar-brand
         >
 
         <b-navbar-toggle
@@ -196,7 +196,7 @@
             <p>
               Somos una tienda online de ventas de productos que ayuda al pueblo
               venezolano a realizar compras desde la comodidad de su hogar con
-              entregas a domiciolio.
+              entregas a domicilio.
             </p>
           </b-col>
           <hr class="clearfix w-100 d-md-none" />

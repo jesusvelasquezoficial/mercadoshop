@@ -67,7 +67,7 @@ app.post("/send-pedido", async(req, res) => {
     var mailOptions = {
       from: `${nombre} ${apellido} <${email}>`,
       to: [process.env.MAIL_USER, process.env.MAIL_USER2],
-      subject: "Nuevo Pedido Phoenix Shop",
+      subject: "Nuevo Pedido Mercado Shop",
       html: mensajeCorreo,
       // html: `<h5>Design&Developer</h5>`
     };

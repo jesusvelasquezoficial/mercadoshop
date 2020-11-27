@@ -1,4 +1,4 @@
-# phoenix_shop
+# mercado_shop
 
 ## Project setup
 ```

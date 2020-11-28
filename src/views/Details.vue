@@ -20,16 +20,26 @@
                 tienda
               </b-breadcrumb-item>
               <b-breadcrumb-item to="">{{
-                $route.params.categoria
+                $route.params.producto
               }}</b-breadcrumb-item>
             </b-breadcrumb>
           </small>
         </b-col>
         <b-col class="d-xs-block d-sm-none">
-          <b-dropdown block size="sm"  text="Categorias" class="mb-3" variant="outline-secondary"> 
+          <b-dropdown
+            block
+            size="sm"
+            text="Categorias"
+            class="mb-3"
+            variant="outline-secondary"
+          >
             <b-dropdown-item to="/tienda/alimentos">Alimentos</b-dropdown-item>
-            <b-dropdown-item to="/tienda/aseo-personal">Aseo Personal</b-dropdown-item>
-            <b-dropdown-item to="/tienda/aseo-del-hogar">Aseo del Hogar</b-dropdown-item>
+            <b-dropdown-item to="/tienda/aseo-personal"
+              >Aseo Personal</b-dropdown-item
+            >
+            <b-dropdown-item to="/tienda/aseo-del-hogar"
+              >Aseo del Hogar</b-dropdown-item
+            >
             <b-dropdown-item to="/tienda/celulares">Celulares</b-dropdown-item>
             <b-dropdown-item to="/tienda/electrodomesticos"
               >Electrodomesticos</b-dropdown-item
@@ -72,18 +82,13 @@
         <b-col sm="8" md="9" lg="9">
           <b-row class="text-left">
             <!-- Sin Productos -->
-            <b-col class="my-5 text-center" v-if="productos == ''">
+            <b-col class="my-5 text-center" v-if="productoDetails == ''">
               <h5>
                 El producto <b>"{{ buscar }}"</b> no esta en inventario
               </h5>
             </b-col>
             <!-- Con Productos -->
-            <b-col
-              md="6"
-              lg="4"
-              v-for="(producto, index) in productos"
-              :key="index"
-            >
+            <b-col md="6" lg="4">
               <b-card
                 no-body
                 class="overflow-hidden shadow-sm mb-3"
@@ -92,47 +97,45 @@
               >
                 <b-row class="d-flex align-items-center" no-gutters>
                   <b-col cols="5" sm="6" md="12">
-                    <router-link :to="rutaDetalles(index)" class="text-decoration-none" >
-                      <img
-                        :src="getImgProduct(producto.imagen)"
-                        :alt="producto.alt"
-                        class="rounded-0"
-                        width="100%"
-                      />
-                    </router-link>
+                    <img
+                      :src="getImgProduct(productoDetails.imagen)"
+                      :alt="productoDetails.alt"
+                      class="rounded-0"
+                      width="100%"
+                    />
                   </b-col>
                   <b-col cols="7" sm="6" md="12">
                     <b-card-body>
-                      <b-card-sub-title class="mb-2">
-                        {{ producto.nombre }}
+                      <!-- <b-card-sub-title class="mb-2">
+                        {{ productoDetails.nombre }}
                       </b-card-sub-title>
                       <b-card-title>
-                        $ {{ producto.precio.toFixed(2) }}
-                      </b-card-title>
+                        $ {{ productoDetails.precio.toFixed(2) }}
+                      </b-card-title> -->
                       <b-card-text>
                         <b-input-group>
                           <template v-slot:prepend>
                             <b-button
                               class="bg-light text-dark"
-                              @click="restarCantProduct(index)"
+                              @click="restarCantProduct(0)"
                               >-</b-button
                             >
                           </template>
                           <b-form-input
                             min="1"
                             class="pl-2 text-center border-secondary"
-                            v-model="producto.cant"
+                            v-model="productoDetails.cant"
                           ></b-form-input>
                           <template v-slot:append>
                             <b-button
                               class="bg-light text-dark"
-                              @click="sumarCantProduct(index)"
+                              @click="sumarCantProduct(0)"
                               >+</b-button
                             >
                           </template>
                         </b-input-group>
                         <b-button
-                          @click="setProductToCart(index)"
+                          @click="setProductToCart(0)"
                           block
                           variant="dark"
                           class="mt-2"
@@ -143,6 +146,12 @@
                   </b-col>
                 </b-row>
               </b-card>
+            </b-col>
+            <b-col md="6" lg="8">
+              <h1>{{productoDetails.nombre}}</h1>
+              <h2>$ {{productoDetails.precio.toFixed(2)}}</h2>
+              <h4>Descripcion</h4>
+              <p>Es un cafe que sabe a mierda</p>
             </b-col>
           </b-row>
         </b-col>
@@ -177,10 +186,6 @@ export default {
     };
   },
   methods: {
-    rutaDetalles(id){
-      var categoria = this.categoriaName;
-      return "/detalles/"+categoria+"/"+id;
-    },
     getImgProduct(id) {
       var images = require.context("@/assets/ProductosPNG/", true, /\.png$/);
       return images("./" + id + ".png");
@@ -204,7 +209,10 @@ export default {
     categoriaName() {
       return this.$route.params.categoria;
     },
-    productos() {
+    productoName() {
+      return this.$route.params.producto;
+    },
+    productoDetails() {
       // Ordenar producto por nombre
       var productosOrdenados = this.$store.getters.getProduct.sort((a, b) => {
         // Use toLowerCase() to ignore character casing
@@ -225,18 +233,20 @@ export default {
         return categoriaProducto.match(this.categoriaName);
       });
       // filtramos los productos por la busqueda
-      var productosEncontrados = filtroCategorias.filter((producto) => {
-        var nombre = producto.nombre.toString().toLowerCase();
-        return nombre.match(this.buscar.toLowerCase());
-      });
-      var allProductos = productosOrdenados.filter((producto) => {
-        var nombre = producto.nombre.toString().toLowerCase();
-        return nombre.match(this.buscar.toLowerCase());
-      });
-      if (productosEncontrados == "") {
-        return allProductos;
-      }
-      return productosEncontrados;
+      var idProduct = this.productoName;
+      // filtramos los productos por la busqueda
+      // var productosEncontrados = filtroCategorias.filter((producto) => {
+      //   var nombre = producto.nombre.toString().toLowerCase();
+      //   return nombre.match(this.buscar.toLowerCase());
+      // });
+      // var allProductos = productosOrdenados.filter((producto) => {
+      //   var nombre = producto.nombre.toString().toLowerCase();
+      //   return nombre.match(this.buscar.toLowerCase());
+      // });
+      // if (productosEncontrados == "") {
+      //   return allProductos;
+      // }
+      return filtroCategorias[idProduct];
     },
   },
 };

@@ -3,7 +3,7 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Shop from "../views/Shop.vue";
 import Factura from "../views/Factura.vue";
-import Shop2 from "../views/Shop2.vue";
+import Details from "../views/Details.vue";
 
 Vue.use(VueRouter);
 
@@ -26,15 +26,23 @@ const routes = [{
     //   import ( /* webpackChunkName: "about" */ '../views/Shop.vue')
   },
   {
+    path: "/detalles",
+    name: "detalles",
+    component: Details,
+    children: [
+      { path: "/detalles/:categoria/:producto", component: Details },
+    ],
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    // component: () =>
+    //   import ( /* webpackChunkName: "about" */ '../views/Shop.vue')
+  },
+  {
     path: "/factura",
     name: "factura",
     component: Factura
   },
-  {
-    path: "/shop2",
-    name: "shop2",
-    component: Shop2
-  }
 ];
 
 const router = new VueRouter({
